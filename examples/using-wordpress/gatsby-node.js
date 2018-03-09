@@ -28,6 +28,7 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
                 slug
                 status
                 template
+                content
               }
             }
           }
@@ -41,6 +42,12 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
         }
 
         // Create Page pages.
+//**************************************************************************************
+/*
+  Perhaps route to templates here instead of creating a PageRouter Component.  Check for template value
+  and path.resolve() to the appropriate React Component
+*/
+//**************************************************************************************
         const pageTemplate = path.resolve(`./src/templates/page.js`)
         // We want to create a detailed page for each
         // page node. We'll just use the Wordpress Slug for the slug.
@@ -61,48 +68,50 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
             },
           })
         })
+        resolve()
       })
       // ==== END PAGES ====
 
-      // ==== POSTS (WORDPRESS NATIVE AND ACF) ====
-      .then(() => {
-        graphql(
-          `
-            {
-              allWordpressPost {
-                edges {
-                  node {
-                    id
-                    slug
-                    status
-                    template
-                    format
-                  }
-                }
-              }
-            }
-          `
-        ).then(result => {
-          if (result.errors) {
-            console.log(result.errors)
-            reject(result.errors)
-          }
-          const postTemplate = path.resolve(`./src/templates/post.js`)
-          // We want to create a detailed page for each
-          // post node. We'll just use the Wordpress Slug for the slug.
-          // The Post ID is prefixed with 'POST_'
-          _.each(result.data.allWordpressPost.edges, edge => {
-            createPage({
-              path: edge.node.slug,
-              component: slash(postTemplate),
-              context: {
-                id: edge.node.id,
-              },
-            })
-          })
-          resolve()
-        })
-      })
+      // // ==== POSTS (WORDPRESS NATIVE AND ACF) ====
+      // .then(() => {
+      //   graphql(
+      //     `
+      //       {
+      //         allWordpressPost {
+      //           edges {
+      //             node {
+      //               id
+      //               slug
+      //               status
+      //               template
+      //               format
+      //             }
+      //           }
+      //         }
+      //       }
+      //     `
+      //   )
+      //   .then(result => {
+      //     if (result.errors) {
+      //       console.log(result.errors)
+      //       reject(result.errors)
+      //     }
+      //     const postTemplate = path.resolve(`./src/templates/post.js`)
+      //     // We want to create a detailed page for each
+      //     // post node. We'll just use the Wordpress Slug for the slug.
+      //     // The Post ID is prefixed with 'POST_'
+      //     _.each(result.data.allWordpressPost.edges, edge => {
+      //       createPage({
+      //         path: edge.node.slug,
+      //         component: slash(postTemplate),
+      //         context: {
+      //           id: edge.node.id,
+      //         },
+      //       })
+      //     })
+      //     resolve()
+      //   })
+      // })
     // ==== END POSTS ====
   })
 }
