@@ -48,7 +48,8 @@ exports.createPages = ({ graphql, boundActionCreators }) => {
   and path.resolve() to the appropriate React Component
 */
 //**************************************************************************************
-        const pageTemplate = path.resolve(`./src/templates/page.js`)
+        
+        const pageTemplate = path.resolve(`./src/templates/PageRouter.js`)
         // We want to create a detailed page for each
         // page node. We'll just use the Wordpress Slug for the slug.
         // The Page ID is prefixed with 'PAGE_'
